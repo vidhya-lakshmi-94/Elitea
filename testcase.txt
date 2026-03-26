@@ -1,0 +1,101 @@
+Test Cases for User Story: Login (US-LOGIN-001)
+
+User Story:
+As a registered user
+I want to log in to the application using my email and password
+So that I can access my personalized dashboard
+
+Acceptance Criteria:
+1. User must enter a valid email format.
+2. Password must meet minimum security requirements (e.g., at least 8 characters).
+3. If credentials are correct, user is redirected to the dashboard.
+
+Test Cases (BDD):
+
+Test Case ID: US-LOGIN-001-TC01
+Title: Successful login with valid email and password
+Preconditions:
+- User is a registered user with verified email.
+- User is on the login page.
+Test Steps (BDD):
+  Scenario: Successful login
+    Given the user is on the login page
+    And the user has a registered account with email "user@example.com" and password "SecurePass1"
+    When the user enters a valid email "user@example.com" and valid password "SecurePass1"
+    And clicks the "Login" button
+    Then the user should be redirected to their personalized dashboard
+Test Data:
+  email: user@example.com
+  password: SecurePass1 (8+ chars, meets security)
+Expected Result:
+- User is authenticated and redirected to dashboard.
+- Dashboard displays user-specific content.
+Negative/Edge Cases:
+- N/A (positive case) — also test with different valid accounts.
+Traceability: US-LOGIN-001; Acceptance Criteria: 1,2,3
+
+Test Case ID: US-LOGIN-001-TC02
+Title: Reject login with invalid email format
+Preconditions:
+- User is on the login page.
+Test Steps (BDD):
+  Scenario: Invalid email format
+    Given the user is on the login page
+    When the user enters an invalid email format "user_at_example.com" and a valid password "SecurePass1"
+    And clicks the "Login" button
+    Then the system should display an email format validation error and prevent login
+Test Data:
+  email: user_at_example.com
+  password: SecurePass1
+Expected Result:
+- Validation message shown (e.g., "Please enter a valid email address").
+- No authentication attempt is performed.
+Negative/Edge Cases:
+  - Empty email field
+  - Email with leading/trailing spaces
+  - Extremely long email beyond system limits
+Traceability: US-LOGIN-001; Acceptance Criteria: 1
+
+Test Case ID: US-LOGIN-001-TC03
+Title: Reject login when password is shorter than minimum length
+Preconditions:
+- User is on the login page.
+Test Steps (BDD):
+  Scenario: Password too short
+    Given the user is on the login page
+    When the user enters a valid email "user@example.com" and a short password "Short1"
+    And clicks the "Login" button
+    Then the system should display a password length validation error and prevent login
+Test Data:
+  email: user@example.com
+  password: Short1 (6 chars)
+Expected Result:
+- Validation message shown (e.g., "Password must be at least 8 characters").
+- No authentication attempt.
+Negative/Edge Cases:
+  - Password exactly 7 chars (fail)
+  - Password exactly 8 chars (pass)
+  - Empty password
+Traceability: US-LOGIN-001; Acceptance Criteria: 2
+
+Test Case ID: US-LOGIN-001-TC04
+Title: Reject login with incorrect credentials
+Preconditions:
+- User is on the login page.
+- Account exists for user@example.com with password SecurePass1.
+Test Steps (BDD):
+  Scenario: Incorrect credentials
+    Given the user is on the login page
+    When the user enters a valid email "user@example.com" and an incorrect password "WrongPass1"
+    And clicks the "Login" button
+    Then the system should display an authentication error (e.g., "Email or password is incorrect") and remain on the login page
+Test Data:
+  email: user@example.com
+  password: WrongPass1
+Expected Result:
+- Authentication fails; error message displayed; no redirect to dashboard.
+- Optionally, increment failed login counter or show account lockout notice after threshold.
+Negative/Edge Cases:
+  - Multiple failed attempts leading to lockout
+  - Correct email but inactive account
+Traceability: US-LOGIN-001; Acceptance Criteria: 3
